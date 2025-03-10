@@ -15,7 +15,7 @@ TYPE_K1 = "min"
 TYPE_K2 = "max"
 TYPE_K3 = "min"
 
-ALTERNATIVE_AMOUNT = 20
+ALTERNATIVE_AMOUNT = 200
 
 DECIMAL_PLACES = 3
 
@@ -214,7 +214,6 @@ def main(*args):
     alternatives = generate_alternatives()
     alternatives = count_e(alternatives)
     alternatives = list(alternatives)
-
     _print_iteration(
         header="Alternatives generated",
         alternatives=alternatives,
@@ -222,25 +221,37 @@ def main(*args):
 
     alternatives = count_pareto_efficient(alternatives)
     alternatives = list(alternatives)
-
     _print_iteration(
         header="Pareto efficient calculated",
         alternatives=alternatives,
     )
 
-    alternatives = filter_pareto_efficient(alternatives)
-    alternatives = list(alternatives)
+    alternatives_pareto = list(alternatives)
 
+    alternatives_pareto = filter_pareto_efficient(alternatives_pareto)
+    alternatives_pareto = list(alternatives_pareto)
     _print_iteration(
         header="Pareto efficient filtered",
-        alternatives=alternatives,
+        alternatives=alternatives_pareto,
     )
+
+    alternatives_pareto = filter_criteria_priority_all(alternatives_pareto)
+    alternatives_pareto = list(alternatives_pareto)
+    _print_iteration(
+        header="Criteria priority filtered (pareto filtered)",
+        alternatives=alternatives_pareto,
+    )
+
+    print("#" * 70)
+    print("#" * 70)
+    print("#" * 70)
+    print("#" * 70)
+    print("#" * 70)
 
     alternatives = filter_criteria_priority_all(alternatives)
     alternatives = list(alternatives)
-
     _print_iteration(
-        header="Criteria priority filtered",
+        header="Criteria priority filtered (NOT filtered)",
         alternatives=alternatives,
     )
 
