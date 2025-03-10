@@ -15,27 +15,27 @@ TYPE_K1 = "min"
 TYPE_K2 = "max"
 TYPE_K3 = "min"
 
-ALTERNATIVE_AMOUNT = 200
+ALTERNATIVE_AMOUNT = 20
 
 DECIMAL_PLACES = 3
 
 # VARIANT #1
-RANGE_K1 = (5.4, 7.9)
-RANGE_K2 = (0.9, 0.99)
-RANGE_K3 = (23.1, 45.8)
-
-CRITERIA_PRIORITY = (1, 3, 2)
-
-DEFAULT_CONCESSION = 0.2
+# RANGE_K1 = (5.4, 7.9)
+# RANGE_K2 = (0.9, 0.99)
+# RANGE_K3 = (23.1, 45.8)
+#
+# CRITERIA_PRIORITY = (1, 3, 2)
+#
+# DEFAULT_CONCESSION = 0.2
 
 # VARIANT #15
-# RANGE_K1 = (7.5, 12.8)
-# RANGE_K2 = (0.91, 0.97)
-# RANGE_K3 = (17.9, 27.4)
-#
-# CRITERIA_PRIORITY = (3, 1, 2)
-#
-# DEFAULT_CONCESSION = 0.3
+RANGE_K1 = (7.5, 12.8)
+RANGE_K2 = (0.91, 0.97)
+RANGE_K3 = (17.9, 27.4)
+
+CRITERIA_PRIORITY = (3, 1, 2)
+
+DEFAULT_CONCESSION = 0.3
 
 
 def get_best_and_worst(kn: int):
@@ -69,7 +69,7 @@ class Alternative:
         "e1",
         "e2",
         "e3",
-        "worse_then",
+        "worse_than",
     )
 
     @classmethod
@@ -77,7 +77,7 @@ class Alternative:
         return cls.headers
 
     @property
-    def worse_then(self):
+    def worse_than(self):
         if self.pareto_better is None:
             return None
 
