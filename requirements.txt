@@ -1,0 +1,2 @@
+numpy==2.2.2
+prettytable==3.15.1
