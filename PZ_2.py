@@ -88,12 +88,12 @@ class Alternative:
             raise TypeError(f"Can not compare Alternative and {type(other)}")
 
         if not all((
-            self.e1,
-            self.e2,
-            self.e3,
-            other.e1,
-            other.e2,
-            other.e3,
+            self.e1 is not None,
+            self.e2 is not None,
+            self.e3 is not None,
+            other.e1 is not None,
+            other.e2 is not None,
+            other.e3 is not None,
         )):
             raise NotImplementedError(
                 "Can only compare E-values, call .count_e() method before",
@@ -242,16 +242,18 @@ def main(*args):
         alternatives=alternatives_pareto,
     )
 
+    print()
+    print()
     print("#" * 70)
+    print(f"{'WITHOUT Pareto filter'.upper():^70}")
     print("#" * 70)
-    print("#" * 70)
-    print("#" * 70)
-    print("#" * 70)
+    print()
+    print()
 
     alternatives = filter_criteria_priority_all(alternatives)
     alternatives = list(alternatives)
     _print_iteration(
-        header="Criteria priority filtered (NOT filtered)",
+        header="Criteria priority filtered (WITHOUT Pareto filter)",
         alternatives=alternatives,
     )
 
