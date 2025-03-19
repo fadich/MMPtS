@@ -20,22 +20,22 @@ ALTERNATIVE_AMOUNT = 20
 DECIMAL_PLACES = 3
 
 # VARIANT #1
-# RANGE_K1 = (5.4, 7.9)
-# RANGE_K2 = (0.9, 0.99)
-# RANGE_K3 = (23.1, 45.8)
-#
-# CRITERIA_PRIORITY = (1, 3, 2)
-#
-# DEFAULT_CONCESSION = 0.2
+RANGE_K1 = (5.4, 7.9)
+RANGE_K2 = (0.9, 0.99)
+RANGE_K3 = (23.1, 45.8)
+
+CRITERIA_PRIORITY = (1, 3, 2)
+
+DEFAULT_CONCESSION = 0.2
 
 # VARIANT #15
-RANGE_K1 = (7.5, 12.8)
-RANGE_K2 = (0.91, 0.97)
-RANGE_K3 = (17.9, 27.4)
-
-CRITERIA_PRIORITY = (3, 1, 2)
-
-DEFAULT_CONCESSION = 0.3
+# RANGE_K1 = (7.5, 12.8)
+# RANGE_K2 = (0.91, 0.97)
+# RANGE_K3 = (17.9, 27.4)
+#
+# CRITERIA_PRIORITY = (3, 1, 2)
+#
+# DEFAULT_CONCESSION = 0.3
 
 
 def get_best_and_worst(kn: int):
@@ -174,8 +174,8 @@ def filter_pareto_efficient(
 def filter_criteria_priority(
     k: int,
     alternatives: Iterable[Alternative],
+    concession: int = DEFAULT_CONCESSION,
 ) -> Iterable[Alternative]:
-    concession = DEFAULT_CONCESSION
     alternatives = list(alternatives)
     best = max(alternatives, key=lambda x: getattr(x, f"e{k}"))
     best_ei = getattr(best, f"e{k}")
@@ -189,10 +189,17 @@ def filter_criteria_priority(
 def filter_criteria_priority_all(
     alternatives: Iterable[Alternative],
 ) -> Iterable[Alternative]:
+    i = 0
     for k in CRITERIA_PRIORITY:
+        i += 1
+        concession = DEFAULT_CONCESSION
+        if i > 2:
+            concession = 0
+
         alternatives = filter_criteria_priority(
             k=k,
             alternatives=alternatives,
+            concession=concession,
         )
         alternatives = list(alternatives)
 
