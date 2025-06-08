@@ -1,71 +1,78 @@
-import sys
+from dataclasses import dataclass
+from typing import List
+from prettytable import PrettyTable
 
-from PZ_2 import (
-    Alternative,
-    count_e,
-    _print_iteration,
-)
+# Конфігурація критеріїв
+TYPE_K = ["min", "max", "min"]
 
-
-TYPE_K1 = "min"
-TYPE_K2 = "max"
-TYPE_K3 = "min"
-
-RANGE_K1 = (5.0, 12.5)
-RANGE_K2 = (0.8, 0.99)
-RANGE_K3 = (21.2, 47.5)
-
-ALPHA = 1
-
-ALTERNATIVES = (
-    Alternative(
-        i=1,
-        k1=7.6,
-        k2=0.84,
-        k3=23.1,
-    ),
-    Alternative(
-        i=2,
-        k1=10.4,
-        k2=0.91,
-        k3=26.3,
-    ),
-    Alternative(
-        i=3,
-        k1=10.3,
-        k2=0.9,
-        k3=43.6,
-    ),
-    Alternative(
-        i=16,
-        k1=5.7,
-        k2=0.97,
-        k3=27.5,
-    ),
-    Alternative(
-        i=17,
-        k1=6.2,
-        k2=0.9,
-        k3=41.5,
-    ),
-)
+# Межі критеріїв
+RANGES = [
+    (5.0, 12.5),  # k1
+    (0.8, 0.99),  # k2
+    (21.2, 47.5)  # k3
+]
 
 
-def main(*args):
-    alternatives = count_e(ALTERNATIVES)
-    alternatives = list(alternatives)
-    for alternative in alternatives:
-        alternative.e1 = round(alternative.e1 ** ALPHA, 2)
-        alternative.e2 = round(alternative.e2 ** ALPHA, 2)
-        alternative.e3 = round(alternative.e3 ** ALPHA, 2)
-
-    _print_iteration(
-        header="Alternatives generated",
-        alternatives=alternatives,
-    )
-
-    return 0
+@dataclass
+class Alternative:
+    i: int
+    k1: float
+    k2: float
+    k3: float
+    e1: float = 0.0
+    e2: float = 0.0
+    e3: float = 0.0
 
 
-if __name__ == "__main__":
-    sys.exit(main(*sys.argv))
+# Вхідні альтернативи (дані із звіту)
+alternatives = [
+    Alternative(1, 7.6, 0.84, 23.1),
+    Alternative(2, 10.4, 0.91, 26.3),
+    Alternative(3, 10.3, 0.9, 43.6),
+    Alternative(16, 5.7, 0.97, 27.5),
+    Alternative(17, 6.2, 0.9, 41.5),
+]
+
+
+# Нормалізація критеріїв (функція корисності)
+def calculate_utilities(alt_list: List[Alternative]):
+    for alt in alt_list:
+        values = [alt.k1, alt.k2, alt.k3]
+        utilities = []
+        for i, (val, (low, high)) in enumerate(zip(values, RANGES)):
+            if TYPE_K[i] == 'max':
+                e = (val - low) / (high - low)
+            else:  # min
+                e = (high - val) / (high - low)
+            utilities.append(round(e, 3))
+        alt.e1, alt.e2, alt.e3 = utilities
+
+
+# Виклик нормалізації
+calculate_utilities(alternatives)
+
+# Виведення результатів
+table = PrettyTable()
+table.field_names = ["i", "k1", "k2", "k3", "e1", "e2", "e3"]
+
+for alt in alternatives:
+    table.add_row([alt.i, alt.k1, alt.k2, alt.k3, alt.e1, alt.e2, alt.e3])
+
+print(table)
+
+# Приклад простої агрегації (як оцінка узагальненого критерію)
+# За замовчуванням вага всіх критеріїв рівна
+lambdas = [0.1, 0.1, 0.8]  # Наприклад: ваги визначені експертом
+
+print("\nУзагальнені оцінки:")
+best_score = -1
+best_alt = None
+
+for alt in alternatives:
+    score = alt.e1 * lambdas[0] + alt.e2 * lambdas[1] + alt.e3 * lambdas[2]
+    print(f"Alternative {alt.i}: Score = {round(score, 3)}")
+    if score > best_score:
+        best_score = score
+        best_alt = alt
+
+print(f"\nНайкраща альтернатива: {best_alt.i} з оцінкою {round(best_score, 3)}")
