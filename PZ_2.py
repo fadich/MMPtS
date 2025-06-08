@@ -39,9 +39,11 @@ DEFAULT_CONCESSION = 0.2
 
 
 def get_best_and_worst(kn: int):
+    module = sys.modules['__main__']
+
     options = [min, max]
-    func_type = globals()[f"TYPE_K{kn}"]
-    range_vals = globals()[f"RANGE_K{kn}"]
+    func_type = getattr(module, f"TYPE_K{kn}")
+    range_vals = getattr(module, f"RANGE_K{kn}")
 
     best, worst = options.pop(func_type == "max"), options.pop()
 
