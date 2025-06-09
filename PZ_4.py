@@ -28,7 +28,7 @@ print("\nВласні вектори:")
 print(eigvecs)
 
 # Вибираємо початкові умови — перший власний вектор (нормалізуємо)
-Z0 = eigvecs[:, 0].real
+Z0 = eigvecs[:, 1].real
 Z0 = Z0 / np.linalg.norm(Z0)
 print("\nПочаткові умови Z(0):")
 print(Z0)
